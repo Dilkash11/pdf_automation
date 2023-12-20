@@ -1,2 +1,4 @@
 # Pdf_automation
-Extract tables from PDFs using keyword search, concatenate them into "Master_file.xlsx". Track completed extractions in "Filename_list.xlsx". New PDFs trigger code execution for pending files. Handle table splitting exceptions with "file_error.xlsx". Consolidate new tables into "new_master_file.xlsx", merge with existing "master_file.xlsx".
+In my automation project, I've implemented a sophisticated system for extracting tables from PDFs using a keyword search. The extracted data is intelligently consolidated into a master table, conveniently stored in an Excel file named "Master_file." Additionally, the automation generates two vital output files: "Filename_list" meticulously records the filenames for successful extractions, while "File_error" captures filenames encountering exceptions.
+
+To enhance efficiency, the automation intelligently checks the "Filename_list" file during subsequent runs. It selectively processes files listed therein, ensuring a streamlined workflow. After successful extraction, the updated data seamlessly integrates into "Master_file," "Filename_list," and "File_error," maintaining an organized and evolving database.
