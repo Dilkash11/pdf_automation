@@ -11,7 +11,7 @@ import openpyxl
 #os.system("ghostscript-install.exe")
 
 
-searchKey = "EXHIBIT 8"
+searchKey = input("Please enter a keyword")
 sowFolderName = "PDFS"
 excelFolderName = "Data"
 masterFileName = "Master_File.xlsx"
