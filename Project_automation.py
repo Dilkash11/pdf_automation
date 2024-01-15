@@ -7,13 +7,75 @@ import os
 import glob
 import tabula
 import openpyxl
+ #GUI
+from tkinter import *
+from PIL import ImageTk, Image
+#os.system("ghostscript-install.exe")
+
+# Define global variables
+pdf_folder_name = ""
+excel_folder_name = ""
+search_key = ""
+#Function for GUI
+def automate_extraction():
+    # Get user inputs from GUI
+    global pdf_folder_name, excel_folder_name, search_key
+    pdf_folder_name = pdf_input.get()
+    excel_folder_name = excel_input.get()
+    search_key = keyword_search_entry.get()
+    return(pdf_folder_name,excel_folder_name,search_key)
+
+#GUI code starts here
+root=Tk()
+root.title("PDF_Automation")
+root.geometry('500x500')
+root.configure(background="black")
+img=Image.open('th.jpg')
+resized_img= img.resize((100,100))
+img=ImageTk.PhotoImage(resized_img)
+
+img_label=Label(root,image=img)
+img_label.pack(pady=(10,10))
+
+pdf_folder= Label(root, text="Enter the folder name where all the pdfs are stored", fg='white', bg='black')
+pdf_folder.pack(pady=(20,5))
+pdf_folder.config(font=('verdana',10))
+
+pdf_var= StringVar()
+pdf_input= Entry(root, width=60)
+pdf_input.pack(ipady=4, pady=(1,15))
+
+excel_folder= Label(root, text="Enter the folder name where you want all the output files to be stored", fg='white', bg='black')
+excel_folder.pack(pady=(20,5))
+excel_folder.config(font=('verdana',10))
+
+excel_var= StringVar()
+excel_input= Entry(root, width=60)
+excel_input.pack(ipady=4, pady=(1,15))
+
+keyword_search_label= Label(root, text="Please enter the search key", fg='white', bg='black')
+keyword_search_label.pack(pady=(20,5))
+keyword_search_label.config(font=('verdana',10))
+
+keyword_search_var=StringVar()
+keyword_search_entry= Entry(root, width=60)
+keyword_search_entry.pack(ipady=4, pady=(1,15))
+
+automate_button = Button(root, text="Automate", command=automate_extraction)
+automate_button.pack(pady=(20, 10))
+
+# Add a button to start the automation
+start_button = Button(root, text="Start Automation", command=start_automation)
+start_button.pack(pady=(20, 10))
+
+root.mainloop()
 
 #os.system("ghostscript-install.exe")
 
 
-searchKey = input("Please enter a keyword")
-sowFolderName = "PDFS"
-excelFolderName = "Data"
+searchKey = search_key
+sowFolderName = pdf_folder_name
+excelFolderName = excel_folder_name
 masterFileName = "Master_File.xlsx"
 errorFileName = "File_error.xlsx"
 sowListFileName = "Filename_List.xlsx"
@@ -23,6 +85,11 @@ currentDir= os.getcwd()
 sowFolderPath= os.path.join(currentDir,sowFolderName)
 excelFolderPath= os.path.join(currentDir, excelFolderName)
 
+if not os.path.exists(excelFolderPath):
+    os.makedirs(excelFolderPath)
+    print(f"Folder '{excelFolderName}' created successfully in the current directory.")
+else:
+    print(f"Folder '{excelFolderName}' already exists in the current directory.")
 allSowFiles = glob.glob(f"{sowFolderPath}/*.Pdf")
 requiredSowFiles = []
 errorFiles = []
@@ -57,12 +124,12 @@ for sow in requiredSowFiles:
     indexPage = searchWord(sow, searchKey)
     tables = camelot.read_pdf(sow, pages = indexPage)
     requiredTable= tables[0].df      
-    for i in range(int(indexPage)+1, totalPage):
-      if ((tables[0].df[0][len(tables[0].df)-1]) == "Estimated Fees"):
-        break      
-      else:
-        tables= camelot.read_pdf(sow, pages = str(i), flavor = "stream")
-        requiredTable.append(tables[0].df) 
+    # for i in range(int(indexPage)+1, totalPage):
+    #   if ((tables[0].df[0][len(tables[0].df)-1]) == "Estimated Fees"):
+    #     break      
+    #   else:
+    #     tables= camelot.read_pdf(sow, pages = str(i), flavor = "stream")
+    #     requiredTable.append(tables[0].df) 
 
     
     sowFileName=os.path.basename(sow).split(".")[0]  
